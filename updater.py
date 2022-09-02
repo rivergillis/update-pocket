@@ -2,7 +2,7 @@ import sys
 import os
 import shutil
 import json
-from pathlib import Path
+from pathlib import Path, PurePath
 import requests
 from bs4 import BeautifulSoup
 
@@ -18,14 +18,22 @@ def download_with_progress(url, destination_fn):
     count = 1
 
     r = requests.get(url, stream=True)
-    total_size_mb = int(r.headers.get('content-length')) / 1024 / 1024
+    try:
+        total_size_mb = int(r.headers.get('content-length')) / 1024 / 1024
+    except:
+        total_size_mb = 0
     with open(destination_fn, 'wb') as fd:
         for chunk in r.iter_content(chunk_size=block_size_b):
             fd.write(chunk)
             written_mb = (count * block_size_b) / 1024 / 1024
-            pct_complete = (written_mb / total_size_mb) * 100
+            if total_size_mb > 0:
+                pct_complete = (written_mb / total_size_mb) * 100
+            else:
+                pct_complete = 0
             print(f'Transferred {written_mb:.2f}MB / {total_size_mb:.2f}MB ({pct_complete:.0f}%)', end='\r', flush=True)
             count += 1
+
+    print(f'Downloaded {url}')
 
 def fetch_repo_list():
     print('Fetching latest repo list...')
@@ -79,13 +87,24 @@ def update_firmware():
 
     versions['firmware'] = basename
 
+def maybe_update_bios(item):
+    bios_item = item['bios']
+    bios_destination_fn = ROOT_DIR / bios_item['path']
+    if bios_destination_fn.is_file():
+        return
+    
+    basename = PurePath(bios_destination_fn).name
+    print(f'Bios for {basename} not detected. Installing...')
+
+    bios_url = bios_item['url']
+    download_with_progress(bios_url, bios_destination_fn)
+
 def update_repo(item):
     repo_name = item['repo']
     releases_url = f'https://api.github.com/repos/{repo_name}/releases/latest'
     r = requests.get(releases_url)
     resp_json = r.json()
 
-    print(resp_json['assets'][0])
     basename = resp_json['assets'][0]['name']
     if versions.get(repo_name, '') == basename:
         print(f'{repo_name} up to date.')
@@ -96,12 +115,25 @@ def update_repo(item):
     workdir_dest_fn = WORK_DIR / basename
     download_with_progress(pkg_url, workdir_dest_fn)
 
+    extract_dir = ROOT_DIR / item['path']
+    extract_dir.mkdir(parents=True, exist_ok=True)
+    shutil.unpack_archive(workdir_dest_fn, extract_dir)
+
+    if item.get('bios', None) is not None:
+        maybe_update_bios(item)
+
+    versions[repo_name] = basename
+
 def update_repos():
     print('Fetching openFPGA core updates...')
     for item in repo:
         if item.get('repo', None) is None:
             continue
-        update_repo(item)
+        try:
+            update_repo(item)
+        except BaseException as e:
+            print(f"Unable to update {item['repo']}: {e}")
+
 
 def main():
     WORK_DIR.mkdir(parents=True, exist_ok=True)
