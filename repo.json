@@ -1,5 +1,8 @@
 [
     {
-        "comment": "TODO. List gh repos and bios files here"
+        "comment": "Thanks to https://joshcampbell191.github.io/openfpga-cores-inventory/analogue-pocket."
+    },
+    {
+        "repo": "spiritualized1997/openFPGA-GBA"
     }
 ]

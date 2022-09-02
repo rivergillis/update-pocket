@@ -42,3 +42,4 @@ Temporary Items
 
 current_versions.json
 *.bin
+tmp_workdir/
