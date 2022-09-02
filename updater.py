@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import json
+import time
 from pathlib import Path, PurePath
 import requests
 from bs4 import BeautifulSoup
@@ -145,6 +146,15 @@ def update_repos():
     for item in repo:
         if item.get('repo', None) is None:
             continue
+        repo_name = item['repo']
+        retries_left = 2
+        while retries_left > 0:
+            try:
+                update_repo(item)
+            except:
+                print(f"Couldn't update {repo_name}, retrying...")
+                time.sleep(1)
+                retries_left -= 1
         try:
             update_repo(item)
         except BaseException as e:
