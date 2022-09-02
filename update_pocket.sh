@@ -23,12 +23,11 @@ if [[ $? -ne 0 ]]; then
 fi
 
 echo 'Getting latest version of updater script...'
-curl $SCRIPT_URL > updater.new
+curl $SCRIPT_URL > updater.py
 if [[ $? -ne 0 ]]; then
-  wget -O updater.new $SCRIPT_URL
+  wget -O updater.py $SCRIPT_URL
 fi
 
 echo 'Launching updater...'
-echo $LAUNCHER_VER
 
 python updater.py $LAUNCHER_VER
