@@ -1,7 +1,7 @@
 #! /bin/bash
 
 LAUNCHER_VER=1
-SCRIPT_URL=https://raw.githubusercontent.com/psf/requests/main/.git-blame-ignore-revs 
+SCRIPT_URL=https://raw.githubusercontent.com/rivergillis/update-pocket/main/updater.py
 
 echo "Checking dependencies..."
 $(python --version >/dev/null 2>&1)
