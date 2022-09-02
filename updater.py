@@ -100,10 +100,18 @@ def maybe_update_bios(bios_item):
 
 def update_repo(item):
     repo_name = item['repo']
-    releases_url = f'https://api.github.com/repos/{repo_name}/releases/latest'
-    r = requests.get(releases_url)
-    resp_json = r.json()
-    release_url = resp_json['url']
+    try:
+        releases_url = f'https://api.github.com/repos/{repo_name}/releases/latest'
+        r = requests.get(releases_url)
+        resp_json = r.json()
+        release_url = resp_json['url']
+    except:
+        # Couldn't get latest release (bad tagging?), just use the first in the list
+        releases_url = f'https://api.github.com/repos/{repo_name}/releases'
+        r = requests.get(releases_url)
+        resp_json = r.json()[0]
+        release_url = resp_json['url']
+
     item_path = item.get('path', '.')
 
     if versions.get(repo_name, '') == release_url:

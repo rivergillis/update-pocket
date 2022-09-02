@@ -25,9 +25,15 @@
         ]
     },
     {
+        "repo": "agg23/analogue-pong"
+    },
+    {
         "repo": "spacemen3/PDP-1"
     },
     {
         "repo": "Mazamars312/Analogue_Pocket_Neogeo"
+    },
+    {
+        "repo": "nullobject/openfpga-tecmo"
     }
 ]
