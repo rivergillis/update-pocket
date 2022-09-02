@@ -3,6 +3,11 @@
         "comment": "Thanks to https://joshcampbell191.github.io/openfpga-cores-inventory/analogue-pocket."
     },
     {
-        "repo": "spiritualized1997/openFPGA-GBA"
+        "repo": "spiritualized1997/openFPGA-GBA",
+        "path": "assets/gba/common",
+        "bios": {
+            "path": "assets/gba/common/gba_bios.bin",
+            "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/GBA.zip/gba_bios.bin"
+        }
     }
 ]

@@ -107,8 +107,8 @@ def main():
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     get_versions()
 
-    # update_firmware()
-    # fetch_repo_list()
+    update_firmware()
+    fetch_repo_list()
     load_repo_list()
     update_repos()
 
