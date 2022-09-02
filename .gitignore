@@ -47,5 +47,6 @@ tmp_workdir/
 Assets/
 Cores/
 Platforms/
+Saves/
 
 *.txt

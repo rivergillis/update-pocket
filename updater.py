@@ -104,6 +104,7 @@ def update_repo(item):
     r = requests.get(releases_url)
     resp_json = r.json()
     release_url = resp_json['url']
+    item_path = item.get('path', '.')
 
     if versions.get(repo_name, '') == release_url:
         print(f'{repo_name} up to date.')
@@ -117,9 +118,13 @@ def update_repo(item):
         workdir_dest_fn = WORK_DIR / basename
         download_with_progress(pkg_url, workdir_dest_fn)
 
-        extract_dir = ROOT_DIR / item['path']
+        extract_dir = ROOT_DIR / item_path
         extract_dir.mkdir(parents=True, exist_ok=True)
-        shutil.unpack_archive(workdir_dest_fn, extract_dir)
+        try:
+            shutil.unpack_archive(workdir_dest_fn, extract_dir)
+        except shutil.ReadError:
+            print(f"Couldn't unpack {basename}, looking for other assets.")
+            continue
 
     if item.get('bios', None) is not None:
         for bios_item in item['bios']:
