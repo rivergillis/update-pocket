@@ -87,8 +87,7 @@ def update_firmware():
 
     versions['firmware'] = basename
 
-def maybe_update_bios(item):
-    bios_item = item['bios']
+def maybe_update_bios(bios_item):
     bios_destination_fn = ROOT_DIR / bios_item['path']
     if bios_destination_fn.is_file():
         return
@@ -104,25 +103,29 @@ def update_repo(item):
     releases_url = f'https://api.github.com/repos/{repo_name}/releases/latest'
     r = requests.get(releases_url)
     resp_json = r.json()
+    release_url = resp_json['url']
 
-    basename = resp_json['assets'][0]['name']
-    if versions.get(repo_name, '') == basename:
+    if versions.get(repo_name, '') == release_url:
         print(f'{repo_name} up to date.')
         return
     
-    print(f'New version found for {repo_name} found: {basename}, updating...')
-    pkg_url = resp_json['assets'][0]['browser_download_url']
-    workdir_dest_fn = WORK_DIR / basename
-    download_with_progress(pkg_url, workdir_dest_fn)
+    print(f'New version found for {repo_name}, updating...')
 
-    extract_dir = ROOT_DIR / item['path']
-    extract_dir.mkdir(parents=True, exist_ok=True)
-    shutil.unpack_archive(workdir_dest_fn, extract_dir)
+    for asset in resp_json['assets']:
+        basename = asset['name']
+        pkg_url = asset['browser_download_url']
+        workdir_dest_fn = WORK_DIR / basename
+        download_with_progress(pkg_url, workdir_dest_fn)
+
+        extract_dir = ROOT_DIR / item['path']
+        extract_dir.mkdir(parents=True, exist_ok=True)
+        shutil.unpack_archive(workdir_dest_fn, extract_dir)
 
     if item.get('bios', None) is not None:
-        maybe_update_bios(item)
+        for bios_item in item['bios']:
+            maybe_update_bios(bios_item)
 
-    versions[repo_name] = basename
+    versions[repo_name] = release_url
 
 def update_repos():
     print('Fetching openFPGA core updates...')
@@ -134,7 +137,6 @@ def update_repos():
         except BaseException as e:
             print(f"Unable to update {item['repo']}: {e}")
 
-
 def main():
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     get_versions()
@@ -145,9 +147,9 @@ def main():
     update_repos()
 
     write_versions()
-
-    print(versions)
     shutil.rmtree(WORK_DIR)
+
+    # input('Update complete! Press ENTER to continue...')
 
 
 if __name__ == '__main__':

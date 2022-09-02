@@ -5,9 +5,25 @@
     {
         "repo": "spiritualized1997/openFPGA-GBA",
         "path": ".",
-        "bios": {
-            "path": "Assets/gba/common/gba_bios.bin",
-            "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/GBA.zip/gba_bios.bin"
-        }
+        "bios": [
+            {
+                "path": "Assets/gba/common/gba_bios.bin",
+                "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/GBA.zip/gba_bios.bin"
+            }
+        ]
+    },
+    {
+        "repo": "spiritualized1997/openFPGA-GB-GBC",
+        "path": ".",
+        "bios": [
+            {
+                "path": "Assets/gbc/common/gbc_bios.bin",
+                "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/Gameboy.zip/GBC_boot_ROM.gb"
+            },
+            {
+                "path": "Assets/gb/common/dmg_bios.bin",
+                "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/Gameboy.zip/GB_boot_ROM.gb"
+            }
+        ]
     }
 ]
