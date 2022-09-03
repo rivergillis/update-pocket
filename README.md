@@ -2,6 +2,8 @@
 
 update_pocket is cross-platform script to update your Analogue Pocket firmware, openFPGA cores, and any required dependencies.
 
+![](demo.gif)
+
 ## Requirements
 - Python 3
 - `requests, beautifulsoup4` python modules
