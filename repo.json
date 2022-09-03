@@ -40,7 +40,17 @@
         "repo": "spacemen3/PDP-1"
     },
     {
-        "repo": "Mazamars312/Analogue_Pocket_Neogeo"
+        "repo": "Mazamars312/Analogue_Pocket_Neogeo",
+        "bios": [
+            {
+                "path": "Assets/ng/common/uni-bios_1_0.rom",
+                "url": "https://archive.org/download/MAME_2003-Plus_Reference_Set_2018/roms/bakatono.zip/uni-bios_1_0.rom"
+            },
+            {
+                "path": "Assets/ng/common/000-lo.lo",
+                "url": "https://archive.org/download/mister-console-bios-pack_theypsilon/NeoGeo.zip/000-lo.lo"
+            }
+        ]
     },
     {
         "repo": "nullobject/openfpga-tecmo"
