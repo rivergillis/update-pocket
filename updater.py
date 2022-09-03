@@ -11,6 +11,7 @@ root_dir = Path()
 current_versions_file = Path()
 repo_file = Path()
 work_dir = Path()
+api_headers = {}
 
 versions = {}
 repo = {}
@@ -23,6 +24,16 @@ def set_paths():
     current_versions_file = root_dir / 'current_versions.json'
     repo_file = root_dir / 'repo.json'
     work_dir = root_dir / 'tmp_workdir'
+
+def maybe_set_api_key():
+    global api_headers
+    try:
+        token_file = root_dir / '.github_token'
+        with open(token_file, 'r') as fd:
+            api_key = fd.read()
+        api_headers = {'Authorization': f'token {api_key}'}
+    except:
+        print('No GitHub API token provided. This is probably fine.')
 
 def download_with_progress(url, destination_fn):
     block_size_b = 512
@@ -113,13 +124,13 @@ def update_repo(item):
     repo_name = item['repo']
     try:
         releases_url = f'https://api.github.com/repos/{repo_name}/releases/latest'
-        r = requests.get(releases_url)
+        r = requests.get(releases_url, headers=api_headers)
         resp_json = r.json()
         release_url = resp_json['url']
     except:
         # Couldn't get latest release (bad tagging?), just use the first in the list
         releases_url = f'https://api.github.com/repos/{repo_name}/releases'
-        r = requests.get(releases_url)
+        r = requests.get(releases_url, headers=api_headers)
         resp_json = r.json()[0]
         release_url = resp_json['url']
 
@@ -163,6 +174,9 @@ def update_repos():
 
 def main():
     set_paths()
+    maybe_set_api_key()
+    print(api_headers)
+    return
 
     work_dir.mkdir(parents=True, exist_ok=True)
     get_versions()
