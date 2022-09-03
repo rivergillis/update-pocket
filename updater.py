@@ -175,8 +175,6 @@ def update_repos():
 def main():
     set_paths()
     maybe_set_api_key()
-    print(api_headers)
-    return
 
     work_dir.mkdir(parents=True, exist_ok=True)
     get_versions()
