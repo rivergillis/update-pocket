@@ -102,6 +102,16 @@ def update_firmware():
     if versions.get('firmware', '') == basename:
         print('Firmware up to date.')
         return
+    
+    # Remove older firmware updates
+    def remove_old_firmware(p):
+        if not p.is_file():
+            return
+        if p.name.startswith('pocket_firmware') and p.name != basename:
+            print(f'Removing old firmware file {p.name}')
+            p.unlink()
+    for p in root_dir.glob('*.bin'):
+        remove_old_firmware(p)
 
     print(f'Newer pocket firmware found: {basename}, updating...')
     destination_fn = root_dir / basename
