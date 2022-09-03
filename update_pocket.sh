@@ -31,4 +31,4 @@ fi
 
 echo 'Launching updater...'
 
-python updater.py $LAUNCHER_VER $SCIRPT_DIR
+python updater.py $LAUNCHER_VER $SCRIPT_DIR
