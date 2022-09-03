@@ -7,12 +7,22 @@ from pathlib import Path, PurePath
 import requests
 from bs4 import BeautifulSoup
 
-ROOT_DIR = Path.cwd()
-CURRENT_VERSIONS_FILE = ROOT_DIR / 'current_versions.json'
-REPO_FILE = ROOT_DIR / 'repo.json'
-WORK_DIR = ROOT_DIR / 'tmp_workdir'
+root_dir = Path()
+current_versions_file = Path()
+repo_file = Path()
+work_dir = Path()
+
 versions = {}
 repo = {}
+
+def set_paths():
+    global root_dir, current_versions_file, repo_file, work_dir
+    if len(sys.argv) < 3:
+        raise Exception('Bad set of args provided to updater.py')
+    root_dir = Path(sys.argv[2])
+    current_versions_file = root_dir / 'current_versions.json'
+    repo_file = root_dir / 'repo.json'
+    work_dir = root_dir / 'tmp_workdir'
 
 def download_with_progress(url, destination_fn):
     block_size_b = 512
@@ -40,25 +50,25 @@ def fetch_repo_list():
     print('Fetching latest repo list...')
     repo_url = 'https://raw.githubusercontent.com/rivergillis/update-pocket/main/repo.json'
     try:
-        download_with_progress(repo_url, REPO_FILE)
+        download_with_progress(repo_url, repo_file)
     except:
         print('Error fetching latest repos. Using version on disk.')
 
 def load_repo_list():
-    file = open(REPO_FILE, 'r')
+    file = open(repo_file, 'r')
     global repo
     repo = json.load(file)   
 
 def get_versions():
     try:
-        file = open(CURRENT_VERSIONS_FILE, 'r')
+        file = open(current_versions_file, 'r')
         global versions
         versions = json.load(file)
     except:
         print('No current versions metadata found. Updating everything.')
 
 def write_versions():
-    with open(CURRENT_VERSIONS_FILE, 'w') as fp:
+    with open(current_versions_file, 'w') as fp:
         json.dump(versions, fp)
 
 def update_firmware():
@@ -83,13 +93,13 @@ def update_firmware():
         return
 
     print(f'Newer pocket firmware found: {basename}, updating...')
-    destination_fn = ROOT_DIR / basename
+    destination_fn = root_dir / basename
     download_with_progress(bin_url, destination_fn)
 
     versions['firmware'] = basename
 
 def maybe_update_bios(bios_item):
-    bios_destination_fn = ROOT_DIR / bios_item['path']
+    bios_destination_fn = root_dir / bios_item['path']
     if bios_destination_fn.is_file():
         return
     
@@ -124,10 +134,10 @@ def update_repo(item):
     for asset in resp_json['assets']:
         basename = asset['name']
         pkg_url = asset['browser_download_url']
-        workdir_dest_fn = WORK_DIR / basename
+        workdir_dest_fn = work_dir / basename
         download_with_progress(pkg_url, workdir_dest_fn)
 
-        extract_dir = ROOT_DIR / item_path
+        extract_dir = root_dir / item_path
         extract_dir.mkdir(parents=True, exist_ok=True)
         try:
             shutil.unpack_archive(workdir_dest_fn, extract_dir)
@@ -152,7 +162,9 @@ def update_repos():
             print(f"Unable to update {item['repo']}: {e}")
 
 def main():
-    WORK_DIR.mkdir(parents=True, exist_ok=True)
+    set_paths()
+
+    work_dir.mkdir(parents=True, exist_ok=True)
     get_versions()
 
     update_firmware()
@@ -161,9 +173,9 @@ def main():
     update_repos()
 
     write_versions()
-    shutil.rmtree(WORK_DIR)
+    shutil.rmtree(work_dir)
 
-    input('Update complete! Press ENTER to continue...')
+    print('Update complete! Go play some games.')
 
 
 if __name__ == '__main__':

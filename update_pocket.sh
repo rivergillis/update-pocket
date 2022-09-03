@@ -1,4 +1,5 @@
 #! /bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 LAUNCHER_VER=1
 SCRIPT_URL=https://raw.githubusercontent.com/rivergillis/update-pocket/main/updater.py
@@ -30,4 +31,4 @@ fi
 
 echo 'Launching updater...'
 
-python updater.py $LAUNCHER_VER
+python updater.py $LAUNCHER_VER $SCIRPT_DIR
