@@ -146,15 +146,6 @@ def update_repos():
     for item in repo:
         if item.get('repo', None) is None:
             continue
-        repo_name = item['repo']
-        retries_left = 2
-        while retries_left > 0:
-            try:
-                update_repo(item)
-            except:
-                print(f"Couldn't update {repo_name}, retrying...")
-                time.sleep(1)
-                retries_left -= 1
         try:
             update_repo(item)
         except BaseException as e:
