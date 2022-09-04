@@ -54,5 +54,8 @@
     },
     {
         "repo": "nullobject/openfpga-tecmo"
+    },
+    {
+        "repo": "agg23/analogue-arduboy"
     }
 ]
