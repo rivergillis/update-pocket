@@ -57,5 +57,8 @@
     },
     {
         "repo": "agg23/analogue-arduboy"
+    },
+    {
+        "repo": "ericlewis/openfpga-spacerace"
     }
 ]
