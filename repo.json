@@ -62,9 +62,9 @@
         "repo": "ericlewis/openfpga-spacerace"
     },
     {
-        "repo": "openfpga-lunarlander"
+        "repo": "ericlewis/openfpga-lunarlander"
     },
     {
-        "repo": "openfpga-asteroids"
+        "repo": "ericlewis/openfpga-asteroids"
     }
 ]
