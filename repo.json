@@ -69,5 +69,8 @@
     },
     {
         "repo": "opengateware/arcade-galaga"
+    },
+    {
+        "repo": "agg23/openfpga-SNES"
     }
 ]
