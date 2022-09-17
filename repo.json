@@ -72,5 +72,11 @@
     },
     {
         "repo": "agg23/openfpga-SNES"
+    },
+    {
+        "repo": "ericlewis/openfpga-dominos"
+    },
+    {
+        "repo": "ericlewis/openfpga-superbreakout"
     }
 ]
