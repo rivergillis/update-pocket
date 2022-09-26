@@ -72,5 +72,8 @@
     },
     {
         "repo": "agg23/openfpga-SNES"
+    },
+    {
+        "repo": "agg23/openfpga-NES"
     }
 ]
