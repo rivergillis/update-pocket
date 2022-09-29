@@ -78,5 +78,8 @@
     },
     {
         "repo": "ericlewis/openfpga-superbreakout"
+    },
+    {
+        "repo": "agg23/openfpga-NES"
     }
 ]
