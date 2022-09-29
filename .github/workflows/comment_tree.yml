@@ -1,0 +1,52 @@
+name: Comment updated Pocket file tree
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run_and_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install python deps
+        run: python -m pip install requests beautifulsoup4
+
+      - name: Create pocket directory
+        run: mkdir pocket
+
+      - name: create pocket-like file structure
+        working-directory: pocket
+        run: mkdir {Assets,Cores,Platforms,Saves,System,Settings,Memories,"GB Studio"}
+
+      - name: run script
+        working-directory: pocket
+        run: python ../updater.py 1 .
+
+      - name: echo tree
+        run: tree pocket
+
+      - name: store tree in env
+        run: |
+          TREE_STRING=$(tree pocket)
+          echo "TREE_STRING<<EOF" >> $GITHUB_ENV
+          echo "$TREE_STRING" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          comment_includes: "New pocket tree:"
+          message: |
+            ## New pocket tree:
+            <details>
+            <summary>Pocket</summary>
+
+
+            ```
+            ${{env.TREE_STRING}}
+            ```
+
+
+            </details>
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
