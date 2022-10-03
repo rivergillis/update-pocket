@@ -81,5 +81,11 @@
     },
     {
         "repo": "agg23/openfpga-NES"
+    },
+    {
+        "repo": "ericlewis/openfpga-genesis"
+    },
+    {
+        "repo": "opengateware/arcade-gberet"
     }
 ]
