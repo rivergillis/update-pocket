@@ -87,5 +87,8 @@
     },
     {
         "repo": "opengateware/arcade-gberet"
+    },
+    {
+        "repo": "opengateware/arcade-pooyan"
     }
 ]
