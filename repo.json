@@ -90,5 +90,8 @@
     },
     {
         "repo": "opengateware/arcade-pooyan"
+    },
+    {
+        "repo": "opengateware/arcade-bankp"
     }
 ]
